@@ -62,6 +62,9 @@ public final class Constants {
     public static final int kFrontRightTurningCanId = 31;
     public static final int kRearRightTurningCanId = 11;
 
+    //pigeon2 CAN ID
+    public static final int kPigeon2CanId = 60;
+
     public static final boolean kGyroReversed = false;
   }
 
@@ -139,4 +142,5 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
-}
+
+ }

@@ -27,7 +27,7 @@ public class MAXSwerveModule {
 
   private final SparkMaxPIDController m_drivingPIDController;
   private final SparkMaxPIDController m_turningPIDController;
-
+  
   private double m_chassisAngularOffset = 0;
   private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
   
@@ -163,6 +163,10 @@ public class MAXSwerveModule {
   }
 
   public void stop(){
+    // System.out.println("==============STOPPING====================");
+    // System.out.println(m_turningEncoder.getPosition());
+    // System.out.println(getTurningEncoder());
+
     m_drivingPIDController.setReference(0, CANSparkMax.ControlType.kVelocity);
     m_turningPIDController.setReference(m_turningEncoder.getPosition(), CANSparkMax.ControlType.kPosition);
   }

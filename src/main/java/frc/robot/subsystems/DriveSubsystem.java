@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenixpro.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.cscore.UsbCamera;
@@ -48,8 +49,9 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   //private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+  // private final Pigeon2 m_gyro2 = new Pigeon2();
   private UsbCamera m_camera ;
-
+  private boolean m_isStopped;
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
@@ -249,9 +251,19 @@ public class DriveSubsystem extends SubsystemBase {
   public double getGyroYaw(){
     return (m_gyro.getYaw())*-1;
   }
+  public double getEncoderMeters(){
+    return m_frontRight.getPosition().distanceMeters;
+  }
 
   @Override
   public void periodic() {
+    float velocity = (Math.abs(m_gyro.getVelocityX()+Math.abs(m_gyro.getVelocityY())));
+    if(velocity<.001){
+      m_frontLeft.stop();
+      m_frontRight.stop();
+      m_rearLeft.stop();
+      m_rearRight.stop();
+    }
     // Update the odometry in the periodic block
     m_odometry.update(
         //Rotation2d.fromDegrees(m_gyro.getAngle()),
@@ -262,8 +274,11 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
-    SmartDashboard.putNumber("Encoder Position", m_frontRight.getTurningEncoder());
+
+    // System.out.println(m_frontRight.getTurningEncoder());
+    SmartDashboard.putNumber("TURNING Encoder Position", m_frontRight.getTurningEncoder());
     SmartDashboard.putNumber("Angle Position", getGyroYaw());
+    SmartDashboard.putNumber("DRIVING Encoder Position", getEncoderMeters());
 
   }
 
