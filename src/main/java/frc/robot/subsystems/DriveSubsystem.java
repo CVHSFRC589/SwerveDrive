@@ -55,7 +55,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
-  private double m_currentTranslationDir = 0.0;
+  private double m_currentTranslationDir = 0.001;
   private double m_currentTranslationMag = 0.0;
 
   private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
