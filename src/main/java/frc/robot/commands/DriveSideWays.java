@@ -7,13 +7,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class DriveForward extends CommandBase {
+public class DriveSideWays extends CommandBase {
   private final DriveSubsystem m_drive;
   private final double m_distance;
   private final double m_speedX;
   private final double m_speedY;
   /** Creates a new DriveForward. */
-  public DriveForward(double speed, double distance ,DriveSubsystem drive, double speedY) {
+  public DriveSideWays(double speed, double distance ,DriveSubsystem drive, double speedY) {
     m_distance = distance;
     m_speedX = speed;
     m_speedY = speedY;
@@ -27,13 +27,13 @@ public class DriveForward extends CommandBase {
   @Override
   public void initialize() {
     m_drive.resetEncoders();
-    m_drive.drive(m_speedX, 0, 0, false, true);
+    m_drive.drive(0, m_speedX, 0, false, true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.drive(m_speedX, 0, 0, false, true);
+    m_drive.drive(0, m_speedX, 0, false, true);
   }
 
   // Called once the command ends or is interrupted.

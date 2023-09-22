@@ -279,6 +279,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("TURNING Encoder Position", m_frontRight.getTurningEncoder());
     SmartDashboard.putNumber("Angle Position", getGyroYaw());
     SmartDashboard.putNumber("DRIVING Encoder Position", getEncoderMeters());
+    SmartDashboard.putString("CURRENT POSE", getPose().toString());
 
   }
 
