@@ -62,6 +62,9 @@ public final class Constants {
     public static final int kFrontRightTurningCanId = 31;
     public static final int kRearRightTurningCanId = 11;
 
+
+   
+    
     //pigeon2 CAN ID
     public static final int kPigeon2CanId = 60;
 
@@ -142,5 +145,13 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+  public static final class ArmConstants {
+     //Arm and spinny guys IDS
+     public static final int kAngleMotorCanId = 50;
+     public static final int kSpinMotorFront = 51;
+     public static final int kSpinMotorBack = 52;
 
+     //Physical Constants
+     public static final double kMaxArmAngle = 45;
+  }
  }

@@ -34,12 +34,20 @@ public class SwerveControllerCommandMaker {
         m_yPIDController = yPIDController;
         m_robotDrive = robotDrive;
 
-        // TrajectoryConfig config = new TrajectoryConfig(
-        // AutoConstants.kMaxSpeedMetersPerSecond,
-        // AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        // // Add kinematics to ensure max speed is actually obeyed
-        // .setKinematics(DriveConstants.kDriveKinematics);
+        
     }
+    // public SwerveControllerCommandMaker(
+    //         ProfiledPIDController thetaController, PIDController xPIDController, PIDController yPIDController,
+    //         DriveSubsystem robotDrive, Trajectory trajectory) {
+    //     m_thetaController = thetaController;
+    //     m_xPIDController = xPIDController;
+    //     m_yPIDController = yPIDController;
+    //     m_robotDrive = robotDrive;
+    //     m_trajectory = trajectory;
+
+        
+    // }
+
 
     public SwerveControllerCommand makeCommand(Trajectory trajectory) {
         return new SwerveControllerCommand(
@@ -55,13 +63,19 @@ public class SwerveControllerCommandMaker {
                 m_robotDrive);
     }
 
+
+
+    //////////////////////////////
+    //////////////////////////////
+    
+    // Does not work as of now
     public SwerveControllerCommand makeCommandPose(Pose2d pose, TrajectoryConfig trajectoryConfig) {
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
                 m_robotDrive.getPose(),
                 List.of(),
                 pose,
                 trajectoryConfig);
-                
+                // new Thread().sleep();
         return new SwerveControllerCommand(
                 trajectory,
                 m_robotDrive::getPose, // Functional interface to feed supplier
