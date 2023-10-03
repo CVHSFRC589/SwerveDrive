@@ -146,12 +146,19 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
   public static final class ArmConstants {
+
      //Arm and spinny guys IDS
-     public static final int kAngleMotorCanId = 50;
-     public static final int kSpinMotorFront = 51;
-     public static final int kSpinMotorBack = 52;
+     public static final int kAngleMotorCanID = 50;
+     public static final int kSpinMotorFrontID = 51;
+     public static final int kSpinMotorBackID = 52;
+     
+
 
      //Physical Constants
+     public static final double kSpiningSpeed = .5;
+     public static final boolean kSpinningDirection = false; //false is spitting it out , true is taking it in
      public static final double kMaxArmAngle = 45;
+     public static final int ArmScaleEncoder = 1; //Change this
+     public static final int kArmGearRatio = 1; //Change this
   }
  }

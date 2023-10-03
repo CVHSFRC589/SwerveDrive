@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.DRIVE;
 
 import java.util.List;
 
@@ -59,7 +59,7 @@ public class Group extends SequentialCommandGroup {
         // List.of(new Translation2d(1, 1), new Translation2d(2, 0), new Translation2d(
         // 0,-1)),
         // End 3 meters straight ahead of where we started,% facing forward
-        new Pose2d(0, -2, new Rotation2d()),
+        new Pose2d(0, 0, new Rotation2d()),
         testConfig);
 
     SwerveControllerCommandMaker cmdMaker = new SwerveControllerCommandMaker(testThetaController, xPIDController,

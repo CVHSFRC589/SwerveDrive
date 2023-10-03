@@ -2,49 +2,67 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.DRIVE;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class DriveSideWays extends CommandBase {
-  private final DriveSubsystem m_drive;
-  private final double m_distance;
-  private final double m_speedX;
-  private final double m_speedY;
-  /** Creates a new DriveForward. */
-  public DriveSideWays(double speed, double distance ,DriveSubsystem drive, double speedY) {
-    m_distance = distance;
-    m_speedX = speed;
-    m_speedY = speedY;
-    m_drive = drive;
-    m_drive.resetEncoders();
-    addRequirements(m_drive);
+public class AutoBalance extends CommandBase {
+  /** Creates a new PigeonBalance. */
+  private DriveSubsystem m_drive;
+  private Timer m_timer;
+
+  public AutoBalance(DriveSubsystem drive) {
     // Use addRequirements() here to declare subsystem dependencies.
+    m_drive = drive;
+    m_timer = new Timer();
+
+    addRequirements(drive);
+
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.resetEncoders();
-    m_drive.drive(0, m_speedX, 0, false, true);
+    m_timer.reset();
+    m_timer.stop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.drive(0, m_speedX, 0, false, true);
+    m_drive.drive(m_drive.pitchAdjustVelocity(), 0, 0, false, true);
+
+    if (m_drive.pitchAdjustVelocity() == 0) {
+      m_timer.start();
+
+    } else {
+
+      m_timer.stop();
+      m_timer.reset();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drive.drive(0, 0, 0, false, true);
+    m_drive.setX();
+    m_timer.stop();
+    m_timer.reset();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(m_drive.getEncoderMeters())>=m_distance;
+    if (m_timer.hasElapsed(3)) {
+      m_drive.setX();
+      return true;
+    }
+
+    else {
+      return false;
+    }
   }
+
 }

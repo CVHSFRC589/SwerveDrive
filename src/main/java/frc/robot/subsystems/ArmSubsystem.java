@@ -7,7 +7,9 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -22,21 +24,37 @@ public class ArmSubsystem extends SubsystemBase {
   
   public ArmSubsystem() {
     //Set Motors
-    m_angleMotor = new CANSparkMax(Constants.ArmConstants.kAngleMotorCanId, MotorType.kBrushed);
-    m_spinMotorFront = new CANSparkMax(Constants.ArmConstants.kSpinMotorFront, MotorType.kBrushed);
-    m_spinMotorBack = new CANSparkMax(Constants.ArmConstants.kSpinMotorBack, MotorType.kBrushed);
-
+    m_angleMotor = new CANSparkMax(Constants.ArmConstants.kAngleMotorCanID, MotorType.kBrushed);
+    m_spinMotorFront = new CANSparkMax(Constants.ArmConstants.kSpinMotorFrontID, MotorType.kBrushed);
+    m_spinMotorBack = new CANSparkMax(Constants.ArmConstants.kSpinMotorBackID, MotorType.kBrushed);
+    m_angleEncoder.setPositionConversionFactor(Constants.ArmConstants.kArmGearRatio);
     //Set Encoders
+    m_angleMotor.getForwardLimitSwitch(Type.kNormallyOpen);
     m_angleEncoder = m_angleMotor.getEncoder();
     m_spinEncoderFront = m_spinMotorFront.getEncoder();
     m_spinEncoderBack = m_spinMotorBack.getEncoder();
 
     resetEncoders();
+    m_spinMotorBack.follow(m_spinMotorFront);
+    m_spinMotorBack.setInverted(true);
   }
 
-  public void moveArm(double speed) {
-
+  public void moveArmUp(double speed) {
+    if(getCurrentAngle() < Constants.ArmConstants.kMaxArmAngle){
+      m_angleMotor.set(speed);
+    }
   }
+
+  public void moveArmDown(double speed){
+    if(getCurrentAngle() > 0){
+      m_angleMotor.set(speed);
+    }
+  }
+
+  public void stopArm(){
+    m_angleMotor.set(0);
+  }
+
 
 
   public void resetEncoders() {
@@ -45,26 +63,34 @@ public class ArmSubsystem extends SubsystemBase {
     m_spinEncoderBack.setPosition(0);
   }
 
-  public void grab() {
-
+  public void spin(boolean direction) {
+    if(direction){
+      m_spinMotorFront.set(Constants.ArmConstants.kSpiningSpeed);
+    }
+    else{
+      m_spinMotorFront.set(-Constants.ArmConstants.kSpiningSpeed);
+    }
   }
 
-  public void shoot() {
-
+  public void stopSpin(){
+    m_spinMotorFront.set(0);
+    m_spinMotorBack.set(0);
   }
+
 
   public double getCurrentAngle() {
-    return 0;
-    //tbd
+    return m_angleEncoder.getPosition()*Constants.ArmConstants.ArmScaleEncoder;
   }
 
   public boolean isRaised() {
-    return true;
-    // tbd
+    return(getCurrentAngle() > Constants.ArmConstants.kMaxArmAngle);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Arm Angle", getCurrentAngle());
+    SmartDashboard.putBoolean("Is Arm Raised", isRaised());
+
   }
 }
