@@ -4,67 +4,45 @@
 
 package frc.robot.commands.DRIVE;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class AutoBalance extends CommandBase {
-  /** Creates a new PigeonBalance. */
+public class AutoAlign extends CommandBase {
+  /** Creates a new AutoAlign. */
   private DriveSubsystem m_drive;
-  private Timer m_timer;
-
-  public AutoBalance(DriveSubsystem drive) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public AutoAlign(DriveSubsystem drive) {
     m_drive = drive;
-    m_timer = new Timer();
-
     addRequirements(drive);
-
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_timer.reset();
-    m_timer.stop();
+    m_drive.drive(0, 0, 0, true, false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-
   public void execute() {
-    System.out.println(m_timer.get());
-    m_drive.drive(m_drive.pitchAdjustVelocity(), 0, 0, false, true);
-
-    if (m_drive.pitchAdjustVelocity() == 0) {
-      m_timer.start();
-
-    } else {
-
-      m_timer.stop();
-      m_timer.reset();
+    if(m_drive.getGyroYaw()<2.5){
+      m_drive.drive(0, 0, .4, true, false);
+    }
+    else if(m_drive.getGyroYaw()>-2.5){
+      m_drive.drive(0, 0, -.4, true, false);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drive.setX();
-    m_timer.stop();
-    m_timer.reset();
+    m_drive.drive(0, 0, 0, true, false);
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_timer.hasElapsed(3)) {
-      // m_drive.setX();
-      return true;
-    }
-
-    else {
-      return false;
-    }
+    return (m_drive.getGyroYaw()>-2.5&&m_drive.getGyroYaw()<2.5);
   }
-
 }

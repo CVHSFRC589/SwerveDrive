@@ -4,10 +4,15 @@
 
 package frc.robot.subsystems;
 
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
+
 // import com.ctre.phoenixpro.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,11 +22,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.vision.VisionPipeline;
+import edu.wpi.first.vision.VisionThread;
 // import edu.wpi.first.wpilibj.ADIS16470_IMU; OLD IMU
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+// import frc.utils.CameraVisionPipeline;
 import frc.utils.SwerveUtils;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -47,10 +55,8 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
-  // private final Pigeon2 m_gyro2 = new Pigeon2();
-  private UsbCamera m_camera;
+  private UsbCamera m_camera = CameraServer.startAutomaticCapture();
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
@@ -60,7 +66,6 @@ public class DriveSubsystem extends SubsystemBase {
   private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
-
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
@@ -75,6 +80,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    m_camera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
   }
 
   /**
@@ -193,10 +199,34 @@ public class DriveSubsystem extends SubsystemBase {
    * Sets the wheels into an X formation to prevent movement.
    */
   public void setX() {
-    m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-    m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-    m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-    m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+    m_frontRight.setDesiredState(new SwerveModuleState(0.01, Rotation2d.fromDegrees(45)));
+    m_rearLeft.setDesiredState(new SwerveModuleState(0.01, Rotation2d.fromDegrees(45)));
+    m_rearRight.setDesiredState(new SwerveModuleState(0.01, Rotation2d.fromDegrees(-45)));
+    m_frontLeft.setDesiredState(new SwerveModuleState(0.01, Rotation2d.fromDegrees(-45)));
+  }
+
+  public SwerveModuleState[] getStates() {
+    SwerveModuleState[] states = {
+      m_frontRight.getState(),
+      m_rearLeft.getState(),
+      m_rearRight.getState(),
+      m_frontLeft.getState()
+    };
+    return states;
+
+  }
+
+  public boolean isX() {
+    SwerveModuleState[] states = getStates();
+    if (
+           states[0].angle== Rotation2d.fromDegrees(45)
+        && states[1].angle== Rotation2d.fromDegrees(45)
+        && states[2].angle==Rotation2d.fromDegrees(-45)
+        && states[3].angle==Rotation2d.fromDegrees(-45))
+        {
+          return true;
+        }
+    return false;
   }
 
   /**
@@ -221,11 +251,15 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.resetEncoders();
   }
 
+  public void setGyro(double angle) {
+    m_gyro.setAngleAdjustment(angle);
+  }
+
   public double pitchAdjustVelocity() {
-    if (m_gyro.getRoll()+3 > 6) {
-      return m_gyro.getRoll()+3 * .1;
-    } else if (m_gyro.getRoll()+3 < -6) {
-      return m_gyro.getRoll()+3 * .1;
+    if (m_gyro.getRoll() + 3 > 6) {
+      return (m_gyro.getRoll() + 3) * 0.01;
+    } else if (m_gyro.getRoll() + 3 < -6) {
+      return (m_gyro.getRoll() + 3) * 0.01;
     } else {
       return 0;
     }
@@ -292,7 +326,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("DRIVING Encoder Position", getEncoderMeters());
     SmartDashboard.putString("CURRENT POSE", getPose().toString());
     // SmartDashboard.putNumber("CURRENT PITCH", m_gyro.getPitch());
-    SmartDashboard.putNumber("CURRENT ROLL", m_gyro.getRoll()); 
+    SmartDashboard.putNumber("CURRENT ROLL", m_gyro.getRoll());
 
   }
 

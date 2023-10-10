@@ -4,22 +4,40 @@
 
 package frc.robot.commands.DRIVE;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import com.fasterxml.jackson.databind.deser.std.MapDeserializer;
+
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class setX extends InstantCommand {
+public class SetX extends CommandBase {
+
   private DriveSubsystem m_drive;
-  public setX(DriveSubsystem drive) {
+  /** Creates a new SetX. */
+  public SetX(DriveSubsystem drive) {
     m_drive = drive;
+    addRequirements(drive);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
     m_drive.setX();
+  }
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {}
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return m_drive.isX();
   }
 }

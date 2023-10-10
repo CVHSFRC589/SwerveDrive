@@ -69,23 +69,23 @@ public class SwerveControllerCommandMaker {
     //////////////////////////////
     
     // Does not work as of now
-    public SwerveControllerCommand makeCommandPose(Pose2d pose, TrajectoryConfig trajectoryConfig) {
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-                m_robotDrive.getPose(),
-                List.of(),
-                pose,
-                trajectoryConfig);
-                // new Thread().sleep();
-        return new SwerveControllerCommand(
-                trajectory,
-                m_robotDrive::getPose, // Functional interface to feed supplier
-                DriveConstants.kDriveKinematics,
+    // public SwerveControllerCommand makeCommandPose(Pose2d pose, TrajectoryConfig trajectoryConfig) {
+    //     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+    //             m_robotDrive.getPose(),
+    //             List.of(),
+    //             pose,
+    //             trajectoryConfig);
+    //             // new Thread().sleep();
+    //     return new SwerveControllerCommand(
+    //             trajectory,
+    //             m_robotDrive::getPose, // Functional interface to feed supplier
+    //             DriveConstants.kDriveKinematics,
 
-                // Position controllers
-                m_xPIDController,
-                m_yPIDController,
-                m_thetaController,
-                m_robotDrive::setModuleStates,
-                m_robotDrive);
-    }
+    //             // Position controllers
+    //             m_xPIDController,
+    //             m_yPIDController,
+    //             m_thetaController,
+    //             m_robotDrive::setModuleStates,
+    //             m_robotDrive);
+    // }
 }
