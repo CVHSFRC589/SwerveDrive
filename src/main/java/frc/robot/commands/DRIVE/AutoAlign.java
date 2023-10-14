@@ -25,10 +25,12 @@ public class AutoAlign extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_drive.getGyroYaw()<2.5){
+    if(m_drive.getGyroYaw()+180<2.5){
+      System.out.print("1");
       m_drive.drive(0, 0, .4, true, false);
     }
-    else if(m_drive.getGyroYaw()>-2.5){
+    else if(m_drive.getGyroYaw()+180>-2.5){
+      System.out.print("2");
       m_drive.drive(0, 0, -.4, true, false);
     }
   }
@@ -43,6 +45,6 @@ public class AutoAlign extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (m_drive.getGyroYaw()>-2.5&&m_drive.getGyroYaw()<2.5);
+    return (m_drive.getGyroYaw()+180>-2.5&&m_drive.getGyroYaw()+180<2.5);
   }
 }

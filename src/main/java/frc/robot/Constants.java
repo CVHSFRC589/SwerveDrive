@@ -30,9 +30,9 @@ public final class Constants {
     public static final double kMaxSpeedMetersPerSecond = 2.4;//4.8
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
-    public static final double kDirectionSlewRate = 5; //1.2 radians per second
-    public static final double kMagnitudeSlewRate = 5; //1.8 // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 5; //2.0 percent per second (1 = 100%)
+    public static final double kDirectionSlewRate = 10; //1.2 radians per second
+    public static final double kMagnitudeSlewRate = 10; //1.8 // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 10; //2.0 percent per second (1 = 100%)
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(21);
@@ -101,16 +101,16 @@ public final class Constants {
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
 
-    public static final double kDrivingP = 0.04;
-    public static final double kDrivingI = 0;
+    public static final double kDrivingP = .0;//0.04
+    public static final double kDrivingI = 0.0001;
     public static final double kDrivingD = 0;
     public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
     public static final double kDrivingMinOutput = -1;
     public static final double kDrivingMaxOutput = 1;
 
-    public static final double kTurningP = 1;
-    public static final double kTurningI = 0;
-    public static final double kTurningD = 0;
+    public static final double kTurningP = 0.5;
+    public static final double kTurningI = 0.0;
+    public static final double kTurningD = 0.0;
     public static final double kTurningFF = 0;
     public static final double kTurningMinOutput = -1;
     public static final double kTurningMaxOutput = 1;
@@ -124,7 +124,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
-    public static final double kDriveDeadband = 0.05;
+    public static final double kDriveDeadband = 0.1;
   }
 
   public static final class AutoConstants {
@@ -135,7 +135,7 @@ public final class Constants {
 
     public static final double kPXController = 1;
     public static final double kPYController = 1;
-    public static final double kPThetaController = 1;
+    public static final double kPThetaController = .5;
 
     // Constraint for the motion profiled robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(

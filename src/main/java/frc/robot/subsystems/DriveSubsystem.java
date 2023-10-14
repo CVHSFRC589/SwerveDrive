@@ -4,8 +4,8 @@
 
 package frc.robot.subsystems;
 
-import org.opencv.core.Rect;
-import org.opencv.imgproc.Imgproc;
+import java.util.Arrays;
+import java.util.Collections;
 
 // import com.ctre.phoenixpro.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
@@ -22,8 +22,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
-import edu.wpi.first.vision.VisionPipeline;
-import edu.wpi.first.vision.VisionThread;
 // import edu.wpi.first.wpilibj.ADIS16470_IMU; OLD IMU
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -121,6 +119,18 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+    // if((xSpeed<0.1&&xSpeed<-0.1)||(ySpeed<0.1&&ySpeed<-0.1)){
+
+    // m_frontLeft.setDesiredState(new SwerveModuleState(0,
+    // m_frontLeft.getState().angle) );
+    // m_frontRight.setDesiredState(new SwerveModuleState(0,
+    // m_frontRight.getState().angle));
+    // m_rearLeft.setDesiredState(new SwerveModuleState(0,
+    // m_rearLeft.getState().angle));
+    // m_rearRight.setDesiredState(new SwerveModuleState(0,
+    // m_rearRight.getState().angle));
+    // return;
+    // }
 
     double xSpeedCommanded;
     double ySpeedCommanded;
@@ -207,10 +217,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   public SwerveModuleState[] getStates() {
     SwerveModuleState[] states = {
-      m_frontRight.getState(),
-      m_rearLeft.getState(),
-      m_rearRight.getState(),
-      m_frontLeft.getState()
+        m_frontRight.getState(),
+        m_rearLeft.getState(),
+        m_rearRight.getState(),
+        m_frontLeft.getState()
     };
     return states;
 
@@ -218,15 +228,24 @@ public class DriveSubsystem extends SubsystemBase {
 
   public boolean isX() {
     SwerveModuleState[] states = getStates();
-    if (
-           states[0].angle== Rotation2d.fromDegrees(45)
-        && states[1].angle== Rotation2d.fromDegrees(45)
-        && states[2].angle==Rotation2d.fromDegrees(-45)
-        && states[3].angle==Rotation2d.fromDegrees(-45))
-        {
-          return true;
-        }
+    if (states[0].angle == Rotation2d.fromDegrees(45)
+        && states[1].angle == Rotation2d.fromDegrees(45)
+        && states[2].angle == Rotation2d.fromDegrees(-45)
+        && states[3].angle == Rotation2d.fromDegrees(-45)) {
+      return true;
+    }
     return false;
+  }
+
+  private static void desaturateWheelSpeeds(
+      SwerveModuleState state, double attainableMaxSpeedMetersPerSecond) {
+    double realMaxSpeed = state.speedMetersPerSecond;
+    if (realMaxSpeed > attainableMaxSpeedMetersPerSecond) {
+
+      state.speedMetersPerSecond = state.speedMetersPerSecond / realMaxSpeed
+          * attainableMaxSpeedMetersPerSecond;
+
+    }
   }
 
   /**
@@ -241,6 +260,32 @@ public class DriveSubsystem extends SubsystemBase {
     m_frontRight.setDesiredState(desiredStates[1]);
     m_rearLeft.setDesiredState(desiredStates[2]);
     m_rearRight.setDesiredState(desiredStates[3]);
+  }
+
+  public void setFrontLeftModuleState(SwerveModuleState state) {
+    desaturateWheelSpeeds(
+        state, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_frontLeft.setDesiredState(state);
+  }
+
+  public void setRearRightModuleState(SwerveModuleState state) {
+    desaturateWheelSpeeds(
+        state, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_rearRight.setDesiredState(state);
+  }
+
+  public void setRearLeftModuleState(SwerveModuleState state) {
+    desaturateWheelSpeeds(
+        state, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_rearLeft.setDesiredState(state);
+
+  }
+
+  public void setFrontRightModuleState(SwerveModuleState state) {
+    desaturateWheelSpeeds(
+        state, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_frontRight.setDesiredState(state);
+
   }
 
   /** Resets the drive encoders to currently read a position of 0. */
@@ -302,6 +347,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
     float velocity = (Math.abs(m_gyro.getVelocityX() + Math.abs(m_gyro.getVelocityY())));
     if (velocity < .001) {
       m_frontLeft.stop();
