@@ -40,6 +40,6 @@ public class RaiseArm extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_arm.getCurrentAngle() >= Constants.ArmConstants.kMaxArmAngle;
+    return m_arm.getCurrentAngle() >= Constants.ArmSpinConstants.kMaxArmAngle;
   }
 }

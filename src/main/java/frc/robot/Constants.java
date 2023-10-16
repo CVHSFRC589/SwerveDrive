@@ -124,6 +124,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kCODriverControllerPort = 1;
     public static final double kDriveDeadband = 0.1;
   }
 
@@ -145,7 +146,8 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
-  public static final class ArmConstants {
+  
+  public static final class ArmSpinConstants {
 
      //Arm and spinny guys IDS
      public static final int kAngleMotorCanID = 50;
@@ -155,6 +157,7 @@ public final class Constants {
 
 
      //Physical Constants
+     public static final double kRaisingSpeed = 1;
      public static final double kSpiningSpeed = .5;
      public static final boolean kSpinningDirection = false; //false is spitting it out , true is taking it in
      public static final double kMaxArmAngle = 45;

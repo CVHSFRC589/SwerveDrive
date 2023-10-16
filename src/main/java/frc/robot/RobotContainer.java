@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
+// import com.pathplanner.lib.PathConstraints;
+// import com.pathplanner.lib.PathPlanner;
+// import com.pathplanner.lib.PathPlannerTrajectory;
+// import com.pathplanner.lib.auto.PIDConstants;
+// import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -47,37 +47,38 @@ public class RobotContainer {
         // private final Gyro m_Gyro = new Gyro();
         // The driver's controller
         XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+        XboxController m_codriverController = new XboxController(OIConstants.kCODriverControllerPort);
         private SendableChooser<Command> m_autoChooser = new SendableChooser<>();
-        private static HashMap<String, Command> m_eventMap = new HashMap<>();
-        private HashMap<String, Auton> autoMap = new HashMap<String, Auton>();
-        private PathPlanner m_pathCreator;
-        public final static SwerveAutoBuilder m_autoBuilder = new SwerveAutoBuilder(
-                        () -> m_robotDrive.getPose(),
-                        pose -> m_robotDrive.resetOdometry(pose),
-                        new PIDConstants(Constants.ModuleConstants.kDrivingP,
-                                        Constants.ModuleConstants.kDrivingI,
-                                        Constants.ModuleConstants.kDrivingD),
-                        new PIDConstants(Constants.ModuleConstants.kTurningP,
-                                        Constants.ModuleConstants.kTurningI,
-                                        Constants.ModuleConstants.kTurningD),
-                        chassisSpeeds -> {
-                                SwerveModuleState[] moduleStates = Constants.DriveConstants.kDriveKinematics
-                                                .toSwerveModuleStates(chassisSpeeds);
-                                m_robotDrive.setFrontLeftModuleState(moduleStates[0]);
-                                m_robotDrive.setFrontRightModuleState(moduleStates[1]);
-                                m_robotDrive.setRearLeftModuleState(moduleStates[2]);
-                                m_robotDrive.setRearRightModuleState(moduleStates[3]);
-                        },
-                        m_eventMap,
-                        m_robotDrive);
+        // private static HashMap<String, Command> m_eventMap = new HashMap<>();
+        // private HashMap<String, Auton> autoMap = new HashMap<String, Auton>();
+        // public final static SwerveAutoBuilder m_autoBuilder = new SwerveAutoBuilder(
+        // () -> m_robotDrive.getPose(),
+        // pose -> m_robotDrive.resetOdometry(pose),
+        // new PIDConstants(Constants.ModuleConstants.kDrivingP,
+        // Constants.ModuleConstants.kDrivingI,
+        // Constants.ModuleConstants.kDrivingD),
+        // new PIDConstants(Constants.ModuleConstants.kTurningP,
+        // Constants.ModuleConstants.kTurningI,
+        // Constants.ModuleConstants.kTurningD),
+        // chassisSpeeds -> {
+        // SwerveModuleState[] moduleStates = Constants.DriveConstants.kDriveKinematics
+        // .toSwerveModuleStates(chassisSpeeds);
+        // m_robotDrive.setFrontLeftModuleState(moduleStates[0]);
+        // m_robotDrive.setFrontRightModuleState(moduleStates[1]);
+        // m_robotDrive.setRearLeftModuleState(moduleStates[2]);
+        // m_robotDrive.setRearRightModuleState(moduleStates[3]);
+        // },
+        // m_eventMap,
+        // m_robotDrive);
 
+        // private PathPlanner m_pathCreator;
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
         public RobotContainer() {
-                m_eventMap.put("Grab", new NOTHING());
-                m_eventMap.put("Throw", new NOTHING());
-                m_eventMap.put("ArmDown", new NOTHING());
+                // m_eventMap.put("Grab", new NOTHING());
+                // m_eventMap.put("Throw", new NOTHING());
+                // m_eventMap.put("ArmDown", new NOTHING());
                 // Command test = m_autoBuilder.fullAuto(new PathPlannerTrajectory());
 
                 m_autoChooser.addOption("Drive out and Balance", new ScoreGetBalance(m_robotDrive));
@@ -111,10 +112,12 @@ public class RobotContainer {
         }
 
         private void configureButtonBindings() {
-                new JoystickButton(m_driverController, 3)
-                                .toggleOnTrue(new AutoBalanceX(m_robotDrive));
-                new JoystickButton(m_driverController, 4)
-                                .toggleOnTrue(new ResetGyro(m_robotDrive));
+
+                // ===============DRIVER========================//
+                // new JoystickButton(m_driverController, 3)
+                //                 .toggleOnTrue(new AutoBalanceX(m_robotDrive));
+                // new JoystickButton(m_driverController, 4)
+                //                 .toggleOnTrue(new ResetGyro(m_robotDrive));
                 new JoystickButton(m_driverController, 1)
                                 .toggleOnTrue(new AutoAlign(m_robotDrive));
 
@@ -122,6 +125,9 @@ public class RobotContainer {
                                 .whileTrue(new RunCommand(
                                                 () -> m_robotDrive.setX(),
                                                 m_robotDrive));
+                // ===============CO-DRIVER========================//
+                //
+
         }
 
         public Command getAutonomousCommand() {

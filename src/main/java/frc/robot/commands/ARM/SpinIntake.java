@@ -6,34 +6,34 @@ package frc.robot.commands.ARM;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.SpinnersSubsystem;
 
-public class GrabArm extends CommandBase {
+public class SpinIntake extends CommandBase {
   /** Creates a new GrabArm. */
-  private ArmSubsystem m_arm;
-  public GrabArm(ArmSubsystem arm) {
-    m_arm = arm;
-    addRequirements(arm);
+  private SpinnersSubsystem m_spin;
+  public SpinIntake(SpinnersSubsystem spin) {
+    m_spin = spin;
+    addRequirements(spin);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_arm.spin(!Constants.ArmConstants.kSpinningDirection);
+    m_spin.spin(!Constants.ArmSpinConstants.kSpinningDirection);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_arm.spin(!Constants.ArmConstants.kSpinningDirection);
+    m_spin.spin(!Constants.ArmSpinConstants.kSpinningDirection);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_arm.stopSpin();
+    m_spin.stopSpin();
     
   }
 
