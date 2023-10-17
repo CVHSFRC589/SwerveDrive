@@ -33,7 +33,7 @@ public class AutoBalance extends CommandBase {
   @Override
 
   public void execute() {
-    System.out.println(m_timer.get());
+    // System.out.println(m_timer.get());
     m_drive.drive(m_drive.pitchAdjustVelocity(), 0, 0, false, true);
 
     if (m_drive.pitchAdjustVelocity() == 0) {
