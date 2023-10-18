@@ -30,11 +30,11 @@ public class AutoAlign extends CommandBase {
   public void execute() {
     double currentyaw = m_drive.getGyroYaw();
     if(currentyaw<175.5){
-      System.out.print("1");
+      // System.out.print("1");
       m_drive.drive(0, 0, .4, true, false);
     }
     else if(currentyaw/-1!=currentyaw){
-      System.out.print("2");  
+      // System.out.print("2");  
       m_drive.drive(0, 0, -.4, true, false);
     }
   }

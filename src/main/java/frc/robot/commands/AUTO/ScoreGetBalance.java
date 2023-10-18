@@ -31,20 +31,20 @@ public class ScoreGetBalance extends SequentialCommandGroup {
         /** Creates a new Group. */
         public ScoreGetBalance(DriveSubsystem drive) { // ,ArmSubsystem arm) {
                 ProfiledPIDController testThetaController = new ProfiledPIDController(
-                                AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+                                AutoConstants.kPThetaController, 1, 1, AutoConstants.kThetaControllerConstraints);
 
                 PIDController xPIDController = new PIDController(AutoConstants.kPXController, 0, 0);
                 PIDController yPIDController = new PIDController(AutoConstants.kPYController, 0, 0);
 
                 TrajectoryConfig tConfig = new TrajectoryConfig(
-                                5,
-                                7)
+                                2,
+                                3)
                                 .setKinematics(DriveConstants.kDriveKinematics);
 
                 Trajectory p12 = TrajectoryGenerator.generateTrajectory(
                                 new Pose2d(0, 0, new Rotation2d(0.01)),
-                                List.of(new Translation2d(1, -1)),
-                                new Pose2d(2, 0, new Rotation2d(3.14)),
+                                List.of(),
+                                new Pose2d(2, 0, new Rotation2d(-3.14)),
                                 tConfig);
                 
                 
