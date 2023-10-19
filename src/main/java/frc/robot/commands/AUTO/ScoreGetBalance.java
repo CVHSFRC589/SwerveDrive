@@ -42,7 +42,7 @@ public class ScoreGetBalance extends SequentialCommandGroup {
                                 .setKinematics(DriveConstants.kDriveKinematics);
 
                 Trajectory p12 = TrajectoryGenerator.generateTrajectory(
-                                new Pose2d(0, 0, new Rotation2d(0.01)),
+                                new Pose2d(0, 0, new Rotation2d(0.00)),
                                 List.of(),
                                 new Pose2d(2, 0, new Rotation2d(-3.14)),
                                 tConfig);
@@ -98,10 +98,10 @@ public class ScoreGetBalance extends SequentialCommandGroup {
                 SwerveControllerCommand cmd5 = cmdMaker.makeCommand(p12);
                 // SwerveControllerCommand cmd5 = cmdMaker.makeCommand(exampleTrajectory);
 
-                drive.resetOdometry(new Pose2d(0, 0, new Rotation2d(0.01)));
+                drive.resetOdometry(new Pose2d(0, 0, new Rotation2d(0.00)));
                 // drive.setGyro(180);
                 addCommands(
-                                new ResetOdom(drive, 0.01),
+                                new ResetOdom(drive, 0.00),
                                 cmd5
                                 // // new RaiseArm(arm)
                                 // // new ThrowArm(arm),

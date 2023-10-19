@@ -164,9 +164,9 @@ public class MAXSwerveModule {
 
   public void stop(){
     // System.out.println("==============STOPPING====================");
-    // System.out.println(m_turningEncoder.getPosition());
+    System.out.println(m_turningEncoder.getPosition())
+    ;
     // System.out.println(getTurningEncoder());
-
     m_drivingPIDController.setReference(0, CANSparkMax.ControlType.kVelocity);
     m_turningPIDController.setReference(m_turningEncoder.getPosition(), CANSparkMax.ControlType.kPosition);
   }

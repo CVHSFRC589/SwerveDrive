@@ -33,6 +33,7 @@ public class DefaultDrive extends CommandBase {
   @Override
   public void execute() {
     m_drive.drive(m_xspeed.getAsDouble(), m_yspeed.getAsDouble(), m_rotspeed.getAsDouble(), true, true);
+    m_drive.controllerXYUpdate((m_xspeed.getAsDouble()));
   }
 
   // Called once the command ends or is interrupted.

@@ -4,13 +4,13 @@
 
 package frc.robot.subsystems;
 
-
 // import com.ctre.phoenixpro.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OIConstants;
 // import frc.utils.CameraVisionPipeline;
 import frc.utils.SwerveUtils;
 
@@ -53,6 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
   private UsbCamera m_camera = CameraServer.startAutomaticCapture();
+  private double m_controllerXY = 1;
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
@@ -119,15 +121,15 @@ public class DriveSubsystem extends SubsystemBase {
     // TEST-------------------------------------------------
     // if ((xSpeed < 0.1 && xSpeed > -0.1) || (ySpeed < 0.1 && ySpeed > -0.1)) {
 
-    //   m_frontLeft.setDesiredState(new SwerveModuleState(0,
-    //       m_frontLeft.getState().angle));
-    //   m_frontRight.setDesiredState(new SwerveModuleState(0,
-    //       m_frontRight.getState().angle));
-    //   m_rearLeft.setDesiredState(new SwerveModuleState(0,
-    //       m_rearLeft.getState().angle));
-    //   m_rearRight.setDesiredState(new SwerveModuleState(0,
-    //       m_rearRight.getState().angle));
-    //   return;
+    // m_frontLeft.setDesiredState(new SwerveModuleState(0,
+    // m_frontLeft.getState().angle));
+    // m_frontRight.setDesiredState(new SwerveModuleState(0,
+    // m_frontRight.getState().angle));
+    // m_rearLeft.setDesiredState(new SwerveModuleState(0,
+    // m_rearLeft.getState().angle));
+    // m_rearRight.setDesiredState(new SwerveModuleState(0,
+    // m_rearRight.getState().angle));
+    // return;
     // }
     // TEST-------------------------------------------------
 
@@ -339,15 +341,30 @@ public class DriveSubsystem extends SubsystemBase {
     return m_frontRight.getPosition().distanceMeters;
   }
 
+  public void controllerXYUpdate(double val) {
+    m_controllerXY = val;
+  }
+
   @Override
   public void periodic() {
-
     float velocity = (Math.abs(m_gyro.getVelocityX() + Math.abs(m_gyro.getVelocityY())));
-    if (velocity < .001) {
-      m_frontLeft.stop();
-      m_frontRight.stop();
-      m_rearLeft.stop();
-      m_rearRight.stop();
+    // System.out.print(velocity+"------------"+
+    // Math.abs(MathUtil.applyDeadband(m_controllerXY,
+    // OIConstants.kDriveDeadband)));
+    if (velocity < .001 || Math.abs(MathUtil.applyDeadband(m_controllerXY, OIConstants.kDriveDeadband)) > 0.1) {
+      // System.out.print("STOPPED================");
+      m_frontLeft.setDesiredState(new SwerveModuleState(0,
+          m_frontLeft.getState().angle));
+      m_frontRight.setDesiredState(new SwerveModuleState(0,
+          m_frontRight.getState().angle));
+      m_rearLeft.setDesiredState(new SwerveModuleState(0,
+          m_rearLeft.getState().angle));
+      m_rearRight.setDesiredState(new SwerveModuleState(0,
+          m_rearRight.getState().angle));
+      // m_frontLeft.stop();
+      // m_frontRight.stop();
+      // m_rearLeft.stop();
+      // m_rearRight.stop();
     }
     // Update the odometry in the periodic block
     m_odometry.update(
