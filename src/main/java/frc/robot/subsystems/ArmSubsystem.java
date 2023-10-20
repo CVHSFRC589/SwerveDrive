@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -27,6 +29,9 @@ public class ArmSubsystem extends SubsystemBase {
     //Set Encoders
     m_angleMotor.getForwardLimitSwitch(Type.kNormallyOpen);
     m_angleEncoder = m_angleMotor.getAbsoluteEncoder(com.revrobotics.SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+  }
+  public void moveArm(DoubleSupplier speed){
+    m_angleMotor.set(speed.getAsDouble()*.5);
   }
 
   public void moveArmUp(double speed) {

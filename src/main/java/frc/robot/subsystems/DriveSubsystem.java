@@ -345,13 +345,25 @@ public class DriveSubsystem extends SubsystemBase {
     m_controllerXY = val;
   }
 
+  public void stopAllModules() {
+    m_frontLeft.setDesiredState(new SwerveModuleState(0,
+        m_frontLeft.getState().angle));
+    m_frontRight.setDesiredState(new SwerveModuleState(0,
+        m_frontRight.getState().angle));
+    m_rearLeft.setDesiredState(new SwerveModuleState(0,
+        m_rearLeft.getState().angle));
+    m_rearRight.setDesiredState(new SwerveModuleState(0,
+        m_rearRight.getState().angle));
+  }
+
   @Override
   public void periodic() {
     float velocity = (Math.abs(m_gyro.getVelocityX() + Math.abs(m_gyro.getVelocityY())));
     // System.out.print(velocity+"------------"+
     // Math.abs(MathUtil.applyDeadband(m_controllerXY,
     // OIConstants.kDriveDeadband)));
-    if (velocity < .001 || Math.abs(MathUtil.applyDeadband(m_controllerXY, OIConstants.kDriveDeadband)) > 0.1) {
+    double controllerXDeadBand = Math.abs(MathUtil.applyDeadband(m_controllerXY, OIConstants.kDriveDeadband));
+    if (velocity < .01 || controllerXDeadBand == 0) {
       // System.out.print("STOPPED================");
       m_frontLeft.setDesiredState(new SwerveModuleState(0,
           m_frontLeft.getState().angle));

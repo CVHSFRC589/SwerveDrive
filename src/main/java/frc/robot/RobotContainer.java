@@ -4,10 +4,6 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 // import com.pathplanner.lib.PathConstraints;
 // import com.pathplanner.lib.PathPlanner;
 // import com.pathplanner.lib.PathPlannerTrajectory;
@@ -30,6 +26,8 @@ import frc.robot.commands.AUTO.ScoreGetBalance;
 import frc.robot.commands.DRIVE.AutoAlign;
 import frc.robot.commands.DRIVE.DefaultDrive;
 import frc.robot.commands.DRIVE.ResetGyro;
+import frc.robot.commands.DRIVE.StopModules;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SpinnersSubsystem;
 
@@ -42,13 +40,13 @@ import frc.robot.subsystems.SpinnersSubsystem;
 public class RobotContainer {
         // The robot's subsystems
         private final static DriveSubsystem m_robotDrive = new DriveSubsystem();
-        // private final static SpinnersSubsystem m_robotSpin = new SpinnersSubsystem();
+        private final static SpinnersSubsystem m_robotSpin = new SpinnersSubsystem();
+        private final static ArmSubsystem m_robotArm = new ArmSubsystem();
         // private final Gyro m_Gyro = new Gyro();
         // The driver's controller
         XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
         XboxController m_codriverController = new XboxController(OIConstants.kCODriverControllerPort);
         private SendableChooser<Command> m_autoChooser = new SendableChooser<>();
-        
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -56,9 +54,9 @@ public class RobotContainer {
         public RobotContainer() {
                 // Command test = m_autoBuilder.fullAuto(new PathPlannerTrajectory());
 
-                m_autoChooser.addOption("Drive out and Balance", new
-                ScoreGetBalance(m_robotDrive));
-                // m_autoChooser.addOption("Score Backup Balance", new ScoreBalance(m_robotDrive, m_robotSpin));
+                m_autoChooser.addOption("Drive out and Balance", new ScoreGetBalance(m_robotDrive));
+                // m_autoChooser.addOption("Score Backup Balance", new
+                // ScoreBalance(m_robotDrive, m_robotSpin));
                 m_autoChooser.setDefaultOption("NOTHING", new NOTHING());
                 SmartDashboard.putData(m_autoChooser);
 
@@ -66,6 +64,11 @@ public class RobotContainer {
                 configureButtonBindings();
 
                 // Configure default commands
+                m_robotArm.setDefaultCommand(
+                        new RunCommand(
+                                () -> m_robotArm.moveArm(
+                                        () -> m_codriverController.getRawAxis(1)),
+                                m_robotArm));
                 m_robotDrive.setDefaultCommand(new DefaultDrive(m_robotDrive,
                                 () -> -MathUtil.applyDeadband(m_driverController.getLeftY(),
                                                 OIConstants.kDriveDeadband),
@@ -91,8 +94,9 @@ public class RobotContainer {
         private void configureButtonBindings() {
 
                 // ===============DRIVER========================//
-                // new JoystickButton(m_driverController, 3)
-                // .toggleOnTrue(new AutoBalanceX(m_robotDrive));
+                new JoystickButton(m_driverController, 3)
+                                .whileTrue(new StopModules(m_robotDrive));
+
                 new JoystickButton(m_driverController, 4)
                                 .toggleOnTrue(new ResetGyro(m_robotDrive));
                 new JoystickButton(m_driverController, 1)
@@ -104,6 +108,9 @@ public class RobotContainer {
                                                 m_robotDrive));
                 // ===============CO-DRIVER========================//
                 //
+                new JoystickButton(m_codriverController, 2)
+                                .whileTrue(new RunCommand(
+                                                () -> m_robotSpin.spin(false)));
 
         }
 
