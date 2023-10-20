@@ -22,8 +22,8 @@ public class SpinnersSubsystem extends SubsystemBase {
 
   public SpinnersSubsystem() {
 
-    m_spinMotorFront = new CANSparkMax(Constants.ArmSpinConstants.kSpinMotorFrontID, MotorType.kBrushed);
-    m_spinMotorBack = new CANSparkMax(Constants.ArmSpinConstants.kSpinMotorBackID, MotorType.kBrushed);
+    m_spinMotorFront = new CANSparkMax(Constants.ArmSpinConstants.kSpinMotorFrontID, MotorType.kBrushless);
+    m_spinMotorBack = new CANSparkMax(Constants.ArmSpinConstants.kSpinMotorBackID, MotorType.kBrushless);
 
     m_spinEncoderFront = m_spinMotorFront.getEncoder();
     m_spinEncoderBack = m_spinMotorBack.getEncoder();

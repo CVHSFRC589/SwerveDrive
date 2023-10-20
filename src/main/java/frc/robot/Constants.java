@@ -101,8 +101,8 @@ public final class Constants {
     public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
     public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
 
-    public static final double kDrivingP = .0;//0.04
-    public static final double kDrivingI = 0.0001;
+    public static final double kDrivingP = 0.04;
+    public static final double kDrivingI = 0; // 0.0001;
     public static final double kDrivingD = 0;
     public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
     public static final double kDrivingMinOutput = -1;
@@ -149,7 +149,18 @@ public final class Constants {
 
   public static final class ArmSpinConstants {
 
-     //Arm and spinny guys IDS
+
+    public static final double kArmMaxRPM = 11000;
+    public static final double kArmMinRPM = 0;
+    public static final double kArmMaxAccel = 4000;
+    public static final double kArmAllowedErr = 0.005;
+
+    public static final double kP = 0.1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double kFF = 0;
+    
+    //Arm and spinny guys IDS
      public static final int kAngleMotorCanID = 50;
      public static final int kSpinMotorFrontID = 51;
      public static final int kSpinMotorBackID = 52;
@@ -158,7 +169,7 @@ public final class Constants {
 
      //Physical Constants
      public static final double kRaisingSpeed = 1;
-     public static final double kSpiningSpeed = .5;
+     public static final double kSpiningSpeed = .2;
      public static final boolean kSpinningDirection = false; //false is spitting it out , true is taking it in
      public static final double kMaxArmAngle = 45;
      public static final int ArmScaleEncoder = 1; //Change this

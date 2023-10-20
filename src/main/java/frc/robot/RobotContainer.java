@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ARM.SpinIntake;
 import frc.robot.commands.AUTO.NOTHING;
 import frc.robot.commands.AUTO.ScoreBalance;
 import frc.robot.commands.AUTO.ScoreGetBalance;
@@ -109,8 +110,7 @@ public class RobotContainer {
                 // ===============CO-DRIVER========================//
                 //
                 new JoystickButton(m_codriverController, 2)
-                                .whileTrue(new RunCommand(
-                                                () -> m_robotSpin.spin(false)));
+                                .whileTrue(new SpinIntake(m_robotSpin));
 
         }
 
